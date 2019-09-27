@@ -966,7 +966,7 @@ int API_EXPORTED libusb_get_port_path(libusb_context *ctx, libusb_device *dev,
  * function and make sure that you only access the parent before issuing
  * \ref libusb_free_device_list(). The reason is that libusb currently does
  * not maintain a permanent list of device instances, and therefore can
- * only guarantee that parents are fully instantiated within a 
+ * only guarantee that parents are fully instantiated within a
  * libusb_get_device_list() - libusb_free_device_list() block.
  */
 DEFAULT_VISIBILITY
@@ -2077,6 +2077,23 @@ int API_EXPORTED libusb_set_option(libusb_context *ctx,
 	default:
 		r = LIBUSB_ERROR_INVALID_PARAM;
 	}
+	va_end(ap);
+
+	return r;
+}
+
+int API_EXPORTED libusb_set_usbdk(libusb_context *ctx)
+{
+	int arg, r = LIBUSB_SUCCESS;
+	va_list ap;
+
+	USBI_GET_CONTEXT(ctx);
+
+	va_start(ap, ctx);
+	if (usbi_backend.set_option)
+		r = usbi_backend.set_option(ctx, LIBUSB_OPTION_USE_USBDK, ap);
+	else
+		r = LIBUSB_ERROR_NOT_SUPPORTED;
 	va_end(ap);
 
 	return r;
