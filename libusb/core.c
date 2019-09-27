@@ -966,7 +966,7 @@ int API_EXPORTED libusb_get_port_path(libusb_context *ctx, libusb_device *dev,
  * function and make sure that you only access the parent before issuing
  * \ref libusb_free_device_list(). The reason is that libusb currently does
  * not maintain a permanent list of device instances, and therefore can
- * only guarantee that parents are fully instantiated within a 
+ * only guarantee that parents are fully instantiated within a
  * libusb_get_device_list() - libusb_free_device_list() block.
  */
 DEFAULT_VISIBILITY
@@ -2214,6 +2214,8 @@ err_free_ctx:
 	usbi_mutex_destroy(&ctx->open_devs_lock);
 	usbi_mutex_destroy(&ctx->usb_devs_lock);
 	usbi_mutex_destroy(&ctx->hotplug_cbs_lock);
+
+	libusb_set_option(&ctx, 1);
 
 	free(ctx);
 err_unlock:
