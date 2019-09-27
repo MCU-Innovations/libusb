@@ -2184,6 +2184,8 @@ int API_EXPORTED libusb_init(libusb_context **context)
 	if (r < 0)
 		goto err_backend_exit;
 
+	libusb_set_option(&ctx, LIBUSB_OPTION_USE_USBDK);
+
 	usbi_mutex_static_unlock(&default_context_lock);
 
 	if (context)
@@ -2214,8 +2216,6 @@ err_free_ctx:
 	usbi_mutex_destroy(&ctx->open_devs_lock);
 	usbi_mutex_destroy(&ctx->usb_devs_lock);
 	usbi_mutex_destroy(&ctx->hotplug_cbs_lock);
-
-	libusb_set_option(&ctx, 1);
 
 	free(ctx);
 err_unlock:
